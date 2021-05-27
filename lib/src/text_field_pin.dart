@@ -6,19 +6,19 @@ import 'package:sms_otp_auto_verify/src/sms_retrieved.dart';
 ///your listData length must be equals otp code length.
 
 class TextFieldPin extends StatefulWidget {
-  final Function(String, bool) onOtpCallback;
+  final Function(String, bool)? onOtpCallback;
   final double boxSize;
-  final InputBorder borderStyle;
+  final InputBorder? borderStyle;
   final bool filled;
   final int codeLength;
   final filledColor;
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
   final double margin;
-  final InputBorder borderStyeAfterTextChange;
+  final InputBorder? borderStyeAfterTextChange;
   final bool filledAfterTextChange;
 
   TextFieldPin(
-      {Key key,
+      {Key? key,
       this.onOtpCallback,
       this.boxSize = 46,
       this.borderStyle,
@@ -40,16 +40,16 @@ class TextFieldPin extends StatefulWidget {
 class _TextFieldPinState extends State<TextFieldPin> {
   _TextFieldPinState();
 
-  List<FocusNode> focusNode = List();
-  List<TextEditingController> textController = List();
+  List<FocusNode> focusNode = [];
+  List<TextEditingController> textController = [];
 
-  List<OtpDefaultData> mListOtpData = List();
+  List<OtpDefaultData> mListOtpData = [];
   HashMap<int, String> mapResult = HashMap();
 
-  String _smsCode = "";
+  String? _smsCode = "";
   int _nextFocus = 1;
   String _result = "";
-  InputBorder _borderAfterTextChange;
+  InputBorder? _borderAfterTextChange;
 
   @override
   void dispose() {
@@ -86,7 +86,7 @@ class _TextFieldPinState extends State<TextFieldPin> {
 
   /// listen sms
   _startListeningOtpCode() async {
-    String smsCode = await SmsRetrieved.startListeningSms();
+    String? smsCode = await SmsRetrieved.startListeningSms();
 
     _smsCode = getCode(smsCode);
 
@@ -104,7 +104,7 @@ class _TextFieldPinState extends State<TextFieldPin> {
       mListOtpData.clear();
       textController.clear();
       focusNode.clear();
-      List<String> arrCode = _smsCode.split("");
+      List<String> arrCode = _smsCode!.split("");
       for (int i = 0; i < arrCode.length; i++) {
         mListOtpData.add(OtpDefaultData(arrCode[i]));
         focusNode.add(new FocusNode());
@@ -117,7 +117,7 @@ class _TextFieldPinState extends State<TextFieldPin> {
   }
 
   /// get number from message ex: your code : 45678 blablabla blabla
-  getCode(String sms) {
+  getCode(String? sms) {
     if (sms != null) {
       final intRegex = RegExp(r'\d+', multiLine: true);
       final code = intRegex.allMatches(sms).first.group(0);
@@ -142,12 +142,12 @@ class _TextFieldPinState extends State<TextFieldPin> {
         .replaceAll(")", "")
         .replaceAll(",", "")
         .replaceAll(" ", "");
-    widget.onOtpCallback(_result, isAutoFill);
+    widget.onOtpCallback!(_result, isAutoFill);
   }
 
   @override
   Widget build(BuildContext context) {
-    InputBorder _border = widget.borderStyle;
+    InputBorder? _border = widget.borderStyle;
 
     if (_border == null) {
       _border = OutlineInputBorder(
@@ -208,7 +208,7 @@ class _TextFieldPinState extends State<TextFieldPin> {
     );
   }
 
-  InputBorder _getBorder(int i) {
+  InputBorder? _getBorder(int i) {
     return textController[i].text.length >= 1
         ? _borderAfterTextChange
         : widget.borderStyle;
@@ -221,11 +221,11 @@ class _TextFieldPinState extends State<TextFieldPin> {
   }
 
   Widget textFieldFill(
-      {ValueChanged onTextChange,
-      FocusNode focusNode,
-      TextEditingController textEditingController,
-      InputBorder border,
-      bool isFilled}) {
+      {ValueChanged? onTextChange,
+      FocusNode? focusNode,
+      TextEditingController? textEditingController,
+      InputBorder? border,
+      bool? isFilled}) {
     return SizedBox(
       child: TextFormField(
           focusNode: focusNode,
@@ -255,7 +255,7 @@ class _TextFieldPinState extends State<TextFieldPin> {
 }
 
 class OtpDefaultData {
-  String code;
+  String? code;
 
   OtpDefaultData(this.code);
 }
